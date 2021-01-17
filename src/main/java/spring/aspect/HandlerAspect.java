@@ -14,11 +14,7 @@ public class HandlerAspect {
     private final static Logger LOG = LogManager.getLogger(HandlerAspect.class);
 
     @Pointcut("execution(* spring.hander.IHandler.process(..))")
-    public void allException() {
-    }
-
-    @Pointcut("execution(* spring.hander.IHandler.process(..))")
-    public void countMethodTime() {
+    public void allHandlersProcess() {
     }
 
     @Pointcut("execution(* spring..*.*(..))")
@@ -36,12 +32,12 @@ public class HandlerAspect {
         LOG.debug("After " + jp.toString());
     }
 
-    @AfterThrowing(value = "allException()", throwing = "ex")
+    @AfterThrowing(value = "allHandlersProcess()", throwing = "ex")
     public void afterThrow(Throwable ex) {
         LOG.error("Exception - ", ex.getMessage(), ex);
     }
 
-    @Around("countMethodTime()")
+    @Around("allHandlersProcess()")
     public Object processTime(ProceedingJoinPoint jp) throws Throwable {
         final long start = System.currentTimeMillis();
         Object result = jp.proceed();
